@@ -50,10 +50,18 @@
             background-color: transparent;
             width: 1200px;
         }
+        
+        .silex-id-1504983577120-4 {
+            width: 1175px;
+            background-color: rgb(255, 255, 255);
+            min-height: 377px;
+            top: 11px;
+            left: 16px;
+        }
     </style>
     <title></title>
     <script type="text/javascript" class="silex-json-styles">
-        [{"desktop":{"body-initial":{"background-color":"rgba(255,255,255,1)"},"silex-id-1474394621033-3":{"top":"5px","left":"0px"},"silex-id-1474394621032-2":{"min-height":"600px","background-color":"transparent","width":"1200px"},"silex-id-1474394605264-1":{"min-height":"100px","width":"100px","top":"100px","left":"100px"},"silex-id-1474394605263-0":{"min-height":"100px","background-color":"transparent"},"silex-id-1442914737143-3":{"min-height":"53px","width":"349px","top":"29px","left":"430px"},"silex-id-1478366444112-0":{"min-height":"100px","background-color":"transparent","width":"1200px"},"silex-id-1478366444112-1":{"top":"100px","left":"NaNpx","background-color":"transparent"},"silex-id-1478366450713-2":{"min-height":"100px","background-color":"transparent","width":"1200px"},"silex-id-1504982368490-0":{"width":"573px","min-height":"51px","top":"6px","left":"349px"},"silex-id-1504982543529-1":{"width":"","background-color":"","min-height":"100px"}},"mobile":{},"componentData":{}}]
+        [{"desktop":{"body-initial":{"background-color":"rgba(255,255,255,1)"},"silex-id-1474394621033-3":{"top":"5px","left":"0px"},"silex-id-1474394621032-2":{"min-height":"600px","background-color":"transparent","width":"1200px"},"silex-id-1474394605264-1":{"min-height":"100px","width":"100px","top":"100px","left":"100px"},"silex-id-1474394605263-0":{"min-height":"100px","background-color":"transparent"},"silex-id-1442914737143-3":{"min-height":"53px","width":"349px","top":"29px","left":"430px"},"silex-id-1478366444112-0":{"min-height":"100px","background-color":"transparent","width":"1200px"},"silex-id-1478366444112-1":{"top":"100px","left":"NaNpx","background-color":"transparent"},"silex-id-1478366450713-2":{"min-height":"100px","background-color":"transparent","width":"1200px"},"silex-id-1504982368490-0":{"width":"573px","min-height":"51px","top":"6px","left":"349px"},"silex-id-1504982543529-1":{"width":"","background-color":"","min-height":"100px"},"silex-id-1504983577120-4":{"width":"1175px","background-color":"rgb(255, 255, 255)","min-height":"377px","top":"11px","left":"16px"}},"mobile":{},"componentData":{}}]
     </script>
 
 
@@ -82,39 +90,6 @@
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.2" data-silex-viewport="">
     <!-- Silex HEAD tag do not remove -->
-    <!DOCTYPE html>
-    <html>
-
-    <head>
-        <title>Arduino SD Card Web Page using Ajax</title>
-        <script>
-            function GetSwitchState()
-            {
-                nocache = "&nocache=" + Math.random() * 1000000;
-                var request = new XMLHttpRequest();
-                request.onreadystatechange = function()
-                {
-                    if (this.readyState == 4) {
-                        if (this.status == 200) {
-                            if (this.responseText != null) {
-                                document.getElementById("switch_txt").innerHTML = this.responseText;
-                            }
-                        }
-                    }
-                }
-                request.open("GET", "ajax_switch" + nocache, true);
-                request.send(null);
-                setTimeout('GetSwitchState()', 1000);
-            }
-        </script>
-    </head>
-
-    <body onload="GetSwitchState()">
-        <h1>Arduino Switch State from SD Card Web Page using Ajax</h1>
-        <p id="switch_txt">Switch state: Not requested...</p>
-    </body>
-
-    </html>
     <!-- End of Silex HEAD tag do not remove -->
 </head>
 
@@ -145,7 +120,40 @@
         </div>
     </div>
     <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1474394621033-3 section-element" data-silex-id="silex-id-1474394621033-3" style="">
-        <div data-silex-type="container" class="editable-style silex-element-content silex-id-1474394621032-2 silex-container-content container-element prevent-draggable website-width" data-silex-id="silex-id-1474394621032-2"></div>
+        <div data-silex-type="container" class="editable-style silex-element-content silex-id-1474394621032-2 silex-container-content container-element prevent-draggable website-width" data-silex-id="silex-id-1474394621032-2">
+            <div data-silex-type="html" class="editable-style silex-id-1504983577120-4 html-element" data-silex-id="silex-id-1504983577120-4" style="">
+                <div class="silex-element-content">
+
+
+                    <title>Arduino SD Card Web Page using Ajax</title>
+                    <script>
+                        function GetSwitchState()
+                        {
+                            nocache = "&nocache=" + Math.random() * 1000000;
+                            var request = new XMLHttpRequest();
+                            request.onreadystatechange = function()
+                            {
+                                if (this.readyState == 4) {
+                                    if (this.status == 200) {
+                                        if (this.responseText != null) {
+                                            document.getElementById("switch_txt").innerHTML = this.responseText;
+                                        }
+                                    }
+                                }
+                            }
+                            request.open("GET", "ajax_switch" + nocache, true);
+                            request.send(null);
+                            setTimeout('GetSwitchState()', 1000);
+                        }
+                    </script>
+
+
+                    <h1>Arduino Switch State from SD Card Web Page using Ajax</h1>
+                    <p id="switch_txt">Switch state: Not requested...</p>
+
+                </div>
+            </div>
+        </div>
     </div>
 
 
