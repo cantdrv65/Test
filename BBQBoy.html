@@ -15,17 +15,244 @@
     <link rel="stylesheet" href="//editor.silex.me/static/2.7/front-end.css" data-silex-static="">
 
     <style type="text/css" class="silex-style"></style>
-    <script type="text/javascript" class="silex-script"></script>
+    <script type="text/javascript" class="silex-script">
+        window.onload=updateasyncpage;
+        
+        scans = 0;
+        
+        
+        
+        
+        function sendButton(){
+        
+        document.getElementById("description").innerHTML = "Processing Button Click";
+        
+        if (document.getElementById("automan").innerHTML == "Manual")
+        {
+        server = "http://192.168.240.1/arduino/mode/1";
+        //server = "arduino/mode/1;
+        }
+        else if (document.getElementById("automan").innerHTML == "Auto")
+        {
+        server = "http://192.168.240.1/arduino/mode/0";
+        //server = "arduino/mode/0;
+        }
+        
+        request = new XMLHttpRequest();
+        
+        request.onreadystatechange = updateasyncbutton;
+        
+        request.open("GET", server, true);
+        
+        request.send(null);
+        
+        document.getElementById("description").innerHTML = request.readyState;
+        
+        }
+        
+        
+        function updateasyncbutton(){
+        
+        document.getElementById("description2").innerHTML = request.readyState;
+        document.getElementById("description3").innerHTML = request.status;
+        
+        if ((request.readyState == 4) && (request.status == 200))
+        
+        {
+        result = request.responseText;
+        
+        document.getElementById("description").innerHTML = result;
+        
+        //bool ready = true;
+        
+        document.getElementById("description4").innerHTML = "Processing Page Complete";
+        
+        singleset = result.split(",");
+        
+        ModeStr = singleset[0];
+        
+        mode = singleset[1];
+        
+        if (mode == 1)
+        { 
+        document.getElementById("automan").innerHTML = "Auto";
+        }
+        else if (mode == 0)
+        {
+        document.getElementById("automan").innerHTML = "Manual";
+        }
+        
+        
+        if (scans == 0) {
+        
+        server = "http://192.168.240.1/arduino/setpoint/0";
+        
+        request = new XMLHttpRequest();
+        
+        request.onreadystatechange = updateasyncsetpoint;
+        
+        request.open("GET", server, true);
+        
+        request.send(null);
+        
+        scans++;
+        }
+        
+        if (scans >= 2) {
+        
+        server = "http://192.168.240.1/arduino/temperature/1";
+        
+        request = new XMLHttpRequest();
+        
+        request.onreadystatechange = updateasynctemp;
+        
+        request.open("GET", server, true);
+        
+        request.send(null);
+        }
+        
+        }
+        }
+        
+        
+        function updateasyncpage(){
+        
+        setTimeout(updateasyncpage, 4000);
+        
+        document.getElementById("description4").innerHTML = "Processing Page Status";
+        
+        server = "http://192.168.240.1/arduino/mode/5";
+        
+        //server = "arduino/mode/5;
+        
+        request = new XMLHttpRequest();
+        
+        request.onreadystatechange = updateasyncbutton;
+        
+        request.open("GET", server, true);
+        
+        request.send(null);
+        
+        document.getElementById("description").innerHTML = request.readyState;
+        
+        document.getElementById("description5").innerHTML = scans;
+        
+        scans++;
+        
+        if (scans >= 10) {
+        scans = 0;
+        }
+        
+        }
+        
+        
+        function sendSetpoint(){
+        
+        document.getElementById("description").innerHTML = "Processing Setpoint";
+        
+        setpoint = document.getElementById("setpoint").value
+        
+        scans = 0;
+        
+        server = "http://192.168.240.1/arduino/setpoint/" + setpoint;
+        
+        //server = "arduino/setpoint/" + setpoint;
+        
+        request = new XMLHttpRequest();
+        
+        request.onreadystatechange = updateasyncsetpoint;
+        
+        request.open("GET", server, true);
+        
+        request.send(null);
+        
+        
+        //document.getElementById("description").innerHTML = request.readyState;
+        
+        
+        }
+        
+        function updateasyncsetpoint(){
+        
+        //document.getElementById("description2").innerHTML = request.readyState;
+        //document.getElementById("description3").innerHTML = request.status;
+        
+        if (((request.readyState == 4) && (request.status == 200)) && (document.getElementById("setpoint").value != setpoint))
+        
+        {
+        result = request.responseText;
+        
+        document.getElementById("description").innerHTML = result;
+        
+        //document.getElementById("description4").innerHTML = "Processing Page Complete";
+        
+        singleset = result.split(",");
+        
+        SetpointStr = singleset[0];
+        
+        setpoint = singleset[1];
+        
+        document.getElementById("setpoint").value = setpoint;
+        
+        }
+        }
+        
+        function updateasynctemp(){
+        
+        //document.getElementById("description2").innerHTML = request.readyState;
+        //document.getElementById("description3").innerHTML = request.status;
+        
+        if ((request.readyState == 4) && (request.status == 200))
+        
+        {
+        result = request.responseText;
+        
+        document.getElementById("description").innerHTML = result;
+        
+        document.getElementById("description4").innerHTML = "Processing Page Complete";
+        
+        var returnlines = result.split("\n");
+        
+        for (var i = 0, j = returnlines.length; i < j; i++) {
+        var currentline = returnlines[i];
+        }
+        
+        singleset = returnlines[0].split(",");
+        
+        TempStr1 = singleset[0];
+        
+        Temp1 = singleset[1];
+        
+        document.getElementById("probe1").value = Temp1;
+        
+        singleset = returnlines[1].split(",");
+        
+        TempStr2 = singleset[0];
+        
+        Temp2 = singleset[1];
+        
+        //document.getElementById("probe2").value = Temp2;
+        
+        singleset = returnlines[2].split(",");
+        
+        TempStr3 = singleset[0];
+        
+        Temp3 = singleset[1];
+        
+        //document.getElementById("probe2").value = Temp3;
+        
+        }
+        }
+    </script>
     <style class="silex-inline-styles" type="text/css">
         .body-initial {
-            background-color: rgba(255, 255, 255, 1);
+            background-color: rgba(209, 204, 222, 0.8745098039215686);
         }
         
         @media only screen and (max-width: 480px),
         only screen and (max-device-width: 480px) {
             .body-initial {
                 background-color: rgba(217, 244, 255, 1);
-                border-style: dashed;
             }
         }
         
@@ -51,25 +278,20 @@
         .silex-id-1474394621033-3 {
             top: 5px;
             left: 0px;
+            min-width: 1200px;
         }
         
         .silex-id-1474394621032-2 {
-            min-height: 600px;
+            min-height: 592px;
             background-color: transparent;
             width: 1200px;
-        }
-        
-        .silex-id-1504983577120-4 {
-            width: 1175px;
-            background-color: rgb(255, 255, 255);
-            min-height: 377px;
-            top: 11px;
-            left: 16px;
+            top: 15px;
+            left: 100px;
         }
     </style>
     <title></title>
     <script type="text/javascript" class="silex-json-styles">
-        [{"desktop":{"body-initial":{"background-color":"rgba(255,255,255,1)"},"silex-id-1474394621033-3":{"top":"5px","left":"0px"},"silex-id-1474394621032-2":{"min-height":"600px","background-color":"transparent","width":"1200px"},"silex-id-1474394605264-1":{"min-height":"100px","width":"100px","top":"100px","left":"100px"},"silex-id-1474394605263-0":{"min-height":"100px","background-color":"transparent"},"silex-id-1442914737143-3":{"min-height":"53px","width":"349px","top":"29px","left":"430px"},"silex-id-1478366444112-0":{"min-height":"100px","background-color":"transparent","width":"1200px"},"silex-id-1478366444112-1":{"top":"100px","left":"NaNpx","background-color":"transparent"},"silex-id-1478366450713-2":{"min-height":"100px","background-color":"transparent","width":"1200px"},"silex-id-1504982368490-0":{"width":"573px","min-height":"51px","top":"6px","left":"349px"},"silex-id-1504982543529-1":{"width":"","background-color":"","min-height":"100px"},"silex-id-1504983577120-4":{"width":"1175px","background-color":"rgb(255, 255, 255)","min-height":"377px","top":"11px","left":"16px"}},"mobile":{"body-initial":{"background-color":"rgba(217,244,255,1)"}},"componentData":{}}]
+        [{"desktop":{"body-initial":{"background-color":"rgba(209,204,222,0.8745098039215686)"},"silex-id-1474394621033-3":{"top":"5px","left":"0px","min-width":"1200px"},"silex-id-1474394621032-2":{"min-height":"592px","background-color":"transparent","width":"1200px","top":"15px","left":"100px"},"silex-id-1474394605264-1":{"min-height":"100px","width":"100px","top":"100px","left":"100px"},"silex-id-1474394605263-0":{"min-height":"100px","background-color":"transparent"},"silex-id-1442914737143-3":{"min-height":"53px","width":"349px","top":"29px","left":"430px"},"silex-id-1478366444112-0":{"min-height":"100px","background-color":"transparent","width":"1200px"},"silex-id-1478366444112-1":{"top":"100px","left":"NaNpx","background-color":"transparent"},"silex-id-1478366450713-2":{"min-height":"100px","background-color":"transparent","width":"1200px"},"silex-id-1504982368490-0":{"width":"573px","min-height":"51px","top":"6px","left":"349px"},"silex-id-1504982543529-1":{"width":"","background-color":"","min-height":"100px"}},"mobile":{"body-initial":{"background-color":"rgba(217,244,255,1)"}},"componentData":{}}]
     </script>
 
 
@@ -91,24 +313,32 @@
 
 
 
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.2" data-silex-viewport="">
+
     <style id="current-page-style">
         .page-page-1 {
             display: inherit;
         }
     </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.2" data-silex-viewport="">
     <!-- Silex HEAD tag do not remove -->
-    <!-- End of Silex HEAD tag do not remove -->
-</head>
+    <html>
 
-<body data-silex-id="body-initial" class="body-initial enable-mobile silex-runtime" data-silex-type="container">
-    <div class="silex-pages">
-        <div data-silex-type="image" class="editable-style silex-id-hamburger-menu image-element menu-button prevent-draggable prevent-resizable" data-silex-id="silex-id-hamburger-menu">
-            <img alt="open mobile menu" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAoCAYAAAC8cqlMAAAB5UlEQVR42u2ZPWvCUBSGM+UfFO3e3dLu/QN+oKj4EUXRQREEJYgoiCAu6qCogyDo7iJ21UUaKqEgCC4iiEMGB3UVgsnpTWj/wfVK2nvhGbKEPJyT996TMMzPGg6H5mKx+GgkyuWyeTQasb8OTDwef4tEIp8+n+/LYIjJZJJHQiwzm81M6OLDarWqNpsNjEYgEJCy2ewT0+/3TagighElNFAnQT6ft1ARKkJFqMgfFvF4PFpuEwFtdrcRqVarIIoirFYrIiyXSxiPx+B2u/GJBINBuF6vQHopigK1Wg2fCMdxcLlciIuoqgqNRgOfiN1uB3Qwg91uB8fjkQiHwwEmkwne1qLxS0VuKKJle71eh06nQ4Rmswk8z+MVcTqdsNlsQJZlotF7Pp8hk8ngE4lGo/qN7xG/vV4Pb0Xm8zlxkdPpBGgMx/+yJxIJKBQKRMjlcuBwOGhq/Q+RcDgMsViMCFrAuFwu/CKDwQC22y1IkkSE/X4PgiDo+xc2Ea0S9zjGa/Hb7Xbxifj9fj0K7yFSqVTwtlY6nYbpdKpPiSRYLBbQarX0PYymFhWhIlSEilCRW6GdyUqlkoVZr9dsKpXiOY6TtW+7BkNBz/7ebrcf9L+6Xq+XRYPMMyrTq5EIhUIvaAjTJb4BBNQ2yhnth0wAAAAASUVORK5CYII="
-                class="silex-element-content">
-        </div>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 
-        <a id="page-page-1" data-silex-type="page" class="page-element page-link-active">Page 1</a></div>
+        <title>The BBQboy</title>
+        <!-- End of Silex HEAD tag do not remove -->
+    </head>
+
+    <body data-silex-id="body-initial" class="body-initial enable-mobile silex-runtime" data-silex-type="container">
+        <div class="silex-pages">
+            <div data-silex-type="image" class="editable-style silex-id-hamburger-menu image-element menu-button prevent-draggable prevent-resizable" data-silex-id="silex-id-hamburger-menu">
+                <img alt="open mobile menu" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAoCAYAAAC8cqlMAAAB5UlEQVR42u2ZPWvCUBSGM+UfFO3e3dLu/QN+oKj4EUXRQREEJYgoiCAu6qCogyDo7iJ21UUaKqEgCC4iiEMGB3UVgsnpTWj/wfVK2nvhGbKEPJyT996TMMzPGg6H5mKx+GgkyuWyeTQasb8OTDwef4tEIp8+n+/LYIjJZJJHQiwzm81M6OLDarWqNpsNjEYgEJCy2ewT0+/3TagighElNFAnQT6ft1ARKkJFqMgfFvF4PFpuEwFtdrcRqVarIIoirFYrIiyXSxiPx+B2u/GJBINBuF6vQHopigK1Wg2fCMdxcLlciIuoqgqNRgOfiN1uB3Qwg91uB8fjkQiHwwEmkwne1qLxS0VuKKJle71eh06nQ4Rmswk8z+MVcTqdsNlsQJZlotF7Pp8hk8ngE4lGo/qN7xG/vV4Pb0Xm8zlxkdPpBGgMx/+yJxIJKBQKRMjlcuBwOGhq/Q+RcDgMsViMCFrAuFwu/CKDwQC22y1IkkSE/X4PgiDo+xc2Ea0S9zjGa/Hb7Xbxifj9fj0K7yFSqVTwtlY6nYbpdKpPiSRYLBbQarX0PYymFhWhIlSEilCRW6GdyUqlkoVZr9dsKpXiOY6TtW+7BkNBz/7ebrcf9L+6Xq+XRYPMMyrTq5EIhUIvaAjTJb4BBNQ2yhnth0wAAAAASUVORK5CYII="
+                    class="silex-element-content">
+            </div>
+
+            <a id="page-page-1" data-silex-type="page" class="page-element page-link-active">Page 1</a></div>
 
 
 
@@ -118,51 +348,20 @@
 
 
 
-    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1478366444112-1 section-element" data-silex-id="silex-id-1478366444112-1" style="">
-        <div data-silex-type="container" class="editable-style silex-element-content silex-id-1478366444112-0 silex-container-content container-element prevent-draggable website-width" data-silex-id="silex-id-1478366444112-0">
-            <div data-silex-type="text" class="editable-style silex-id-1504982368490-0 text-element" data-silex-id="silex-id-1504982368490-0" style="">
-                <div class="silex-element-content normal">
-                    <font size="6">The BBQBoy Pit Control Interface</font>
+        <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1478366444112-1 section-element" data-silex-id="silex-id-1478366444112-1" style="">
+            <div data-silex-type="container" class="editable-style silex-element-content silex-id-1478366444112-0 silex-container-content container-element prevent-draggable website-width" data-silex-id="silex-id-1478366444112-0">
+                <div data-silex-type="text" class="editable-style silex-id-1504982368490-0 text-element" data-silex-id="silex-id-1504982368490-0" style="">
+                    <div class="silex-element-content normal">
+                        <font size="6">The BBQBoy Pit Control Interface</font>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1474394621033-3 section-element" data-silex-id="silex-id-1474394621033-3" style="">
-        <div data-silex-type="container" class="editable-style silex-element-content silex-id-1474394621032-2 silex-container-content container-element prevent-draggable website-width" data-silex-id="silex-id-1474394621032-2">
-            <div data-silex-type="html" class="editable-style silex-id-1504983577120-4 html-element" data-silex-id="silex-id-1504983577120-4" style="">
-                <div class="silex-element-content">
+        <div data-silex-type="container" class="prevent-draggable container-element editable-style silex-id-1474394621033-3 section-element" data-silex-id="silex-id-1474394621033-3" style="">
+            <div data-silex-type="container" class="editable-style silex-element-content silex-id-1474394621032-2 silex-container-content container-element prevent-draggable website-width" data-silex-id="silex-id-1474394621032-2">
 
-
-                    <title>Arduino SD Card Web Page using Ajax</title>
-                    <script>
-                        function GetSwitchState()
-                        {
-                            nocache = "&nocache=" + Math.random() * 1000000;
-                            var request = new XMLHttpRequest();
-                            request.onreadystatechange = function()
-                            {
-                                if (this.readyState == 4) {
-                                    if (this.status == 200) {
-                                        if (this.responseText != null) {
-                                            document.getElementById("switch_txt").innerHTML = this.responseText;
-                                        }
-                                    }
-                                }
-                            }
-                            request.open("GET", "ajax_switch" + nocache, true);
-                            request.send(null);
-                            setTimeout('GetSwitchState()', 1000);
-                        }
-                    </script>
-
-
-                    <h1>Arduino Switch State from SD Card Web Page using Ajax</h1>
-                    <p id="switch_txt">Switch state: Not requested...</p>
-
-                </div>
             </div>
         </div>
-    </div>
 
 
 
@@ -182,6 +381,8 @@
 
 
 
-</body>
 
-</html>
+
+    </body>
+
+    </html>
